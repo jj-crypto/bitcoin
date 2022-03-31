@@ -15,6 +15,7 @@
 #include <primitives/block.h>
 #include <primitives/transaction.h>
 #include <rpc/blockchain.h>
+#include <rpc/mempool.h>
 #include <rpc/protocol.h>
 #include <rpc/server.h>
 #include <rpc/server_util.h>
@@ -283,8 +284,8 @@ static bool rest_block(const std::any& context,
         return RESTERR(req, HTTP_BAD_REQUEST, "Invalid hash: " + hashStr);
 
     CBlock block;
-    CBlockIndex* pblockindex = nullptr;
-    CBlockIndex* tip = nullptr;
+    const CBlockIndex* pblockindex = nullptr;
+    const CBlockIndex* tip = nullptr;
     {
         ChainstateManager* maybe_chainman = GetChainman(context, req);
         if (!maybe_chainman) return false;
@@ -669,7 +670,7 @@ static bool rest_tx(const std::any& context, HTTPRequest* req, const std::string
 
     case RetFormat::JSON: {
         UniValue objTx(UniValue::VOBJ);
-        TxToUniv(*tx, hashBlock, objTx);
+        TxToUniv(*tx, /*block_hash=*/hashBlock, /*entry=*/ objTx);
         std::string strJSON = objTx.write() + "\n";
         req->WriteHeader("Content-Type", "application/json");
         req->WriteReply(HTTP_OK, strJSON);
@@ -854,7 +855,7 @@ static bool rest_getutxos(const std::any& context, HTTPRequest* req, const std::
 
             // include the script in a json output
             UniValue o(UniValue::VOBJ);
-            ScriptPubKeyToUniv(coin.out.scriptPubKey, o, true);
+            ScriptToUniv(coin.out.scriptPubKey, /*out=*/o, /*include_hex=*/true, /*include_address=*/true);
             utxo.pushKV("scriptPubKey", o);
             utxos.push_back(utxo);
         }

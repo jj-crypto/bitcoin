@@ -162,17 +162,13 @@ desirable for building Bitcoin Core release binaries."
 (define (make-gcc-with-pthreads gcc)
   (package-with-extra-configure-variable gcc "--enable-threads" "posix"))
 
-;; Required to support std::filesystem for mingw-w64 target.
-(define (make-gcc-without-newlib gcc)
-  (package-with-extra-configure-variable gcc "--with-newlib" "no"))
-
 (define (make-mingw-pthreads-cross-toolchain target)
   "Create a cross-compilation toolchain package for TARGET"
   (let* ((xbinutils (cross-binutils target))
          (pthreads-xlibc mingw-w64-x86_64-winpthreads)
          (pthreads-xgcc (make-gcc-with-pthreads
                          (cross-gcc target
-                                    #:xgcc (make-gcc-without-newlib (make-ssp-fixed-gcc base-gcc))
+                                    #:xgcc (make-ssp-fixed-gcc base-gcc)
                                     #:xbinutils xbinutils
                                     #:libc pthreads-xlibc))))
     ;; Define a meta-package that propagates the resulting XBINUTILS, XLIBC, and
@@ -201,7 +197,7 @@ chain for " target " development."))
 (define-public lief
   (package
    (name "python-lief")
-   (version "0.11.5")
+   (version "0.12.0")
    (source
     (origin
      (method git-fetch)
@@ -211,7 +207,7 @@ chain for " target " development."))
      (file-name (git-file-name name version))
      (sha256
       (base32
-       "0qahjfg1n0x76ps2mbyljvws1l3qhkqvmxqbahps4qgywl2hbdkj"))))
+       "026jchj56q25v6gc0754dj9cj5hz5zaza8ij93y5ga94w20kzm9q"))))
    (build-system python-build-system)
    (native-inputs
     `(("cmake" ,cmake)))
@@ -485,7 +481,7 @@ and endian independent.")
     (license license:expat)))
 
 (define-public python-signapple
-  (let ((commit "0777ce58e61b0e6be753a5f524149d6d47905186"))
+  (let ((commit "8a945a2e7583be2665cf3a6a89d665b70ecd1ab6"))
     (package
       (name "python-signapple")
       (version (git-version "0.1" "1" commit))
@@ -498,7 +494,7 @@ and endian independent.")
          (file-name (git-file-name name commit))
          (sha256
           (base32
-           "19axspyyfqbrfw2r53c17mi9bvm8zsb39mz8v9h7c173qkm3x5ym"))))
+           "0fr1hangvfyiwflca6jg5g8zvg3jc9qr7vd2c12ff89pznf38dlg"))))
       (build-system python-build-system)
       (propagated-inputs
        `(("python-asn1crypto" ,python-asn1crypto)
@@ -506,8 +502,7 @@ and endian independent.")
          ("python-certvalidator" ,python-certvalidator)
          ("python-elfesteem" ,python-elfesteem)
          ("python-requests" ,python-requests)
-         ("python-macholib" ,python-macholib)
-         ("libcrypto" ,openssl)))
+         ("python-macholib" ,python-macholib)))
       ;; There are no tests, but attempting to run python setup.py test leads to
       ;; problems, just disable the test
       (arguments '(#:tests? #f))

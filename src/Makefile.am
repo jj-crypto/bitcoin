@@ -209,6 +209,7 @@ BITCOIN_CORE_H = \
   reverse_iterator.h \
   rpc/blockchain.h \
   rpc/client.h \
+  rpc/mempool.h \
   rpc/mining.h \
   rpc/protocol.h \
   rpc/rawtransaction_util.h \
@@ -370,12 +371,14 @@ libbitcoin_node_a_SOURCES = \
   pow.cpp \
   rest.cpp \
   rpc/blockchain.cpp \
+  rpc/mempool.cpp \
   rpc/mining.cpp \
   rpc/misc.cpp \
   rpc/net.cpp \
   rpc/rawtransaction.cpp \
   rpc/server.cpp \
   rpc/server_util.cpp \
+  rpc/txoutproof.cpp \
   script/sigcache.cpp \
   shutdown.cpp \
   signet.cpp \
@@ -603,7 +606,6 @@ libbitcoin_util_a_SOURCES = \
   chainparamsbase.cpp \
   clientversion.cpp \
   compat/glibcxx_sanity.cpp \
-  compat/strnlen.cpp \
   fs.cpp \
   interfaces/echo.cpp \
   interfaces/handler.cpp \
@@ -618,6 +620,7 @@ libbitcoin_util_a_SOURCES = \
   util/asmap.cpp \
   util/bip32.cpp \
   util/bytevectorhash.cpp \
+  util/check.cpp \
   util/error.cpp \
   util/fees.cpp \
   util/getuniquepath.cpp \
@@ -836,6 +839,7 @@ bitcoin_chainstate_SOURCES = \
   uint256.cpp \
   util/asmap.cpp \
   util/bytevectorhash.cpp \
+  util/check.cpp \
   util/getuniquepath.cpp \
   util/hasher.cpp \
   util/moneystr.cpp \
